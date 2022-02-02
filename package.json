@@ -1,0 +1,23 @@
+{
+  "name": "movies-explorer-api-artem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArtemPraktikum/movies-explorer-api.git"
+  },
+  "author": "artem",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArtemPraktikum/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/ArtemPraktikum/movies-explorer-api#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
