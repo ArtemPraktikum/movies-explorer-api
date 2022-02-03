@@ -1,3 +1,5 @@
+// Все роуты для /movies импорт. в routes/index.js
+
 const movieRouter = require('express').Router();
 
 // роутер для контроллера который возвращает все сохранённые текущим  пользователем фильмы
@@ -6,4 +8,5 @@ movieRouter.get('/movies', () => { console.log('test3')});
 movieRouter.post('/movies', () => { console.log('test4')});
 // роутер для контроллера который удаляет сохранённый фильм по !id!
 movieRouter.delete('/movies/:_id',  () => { console.log('test5')});
+
 module.exports = movieRouter;
