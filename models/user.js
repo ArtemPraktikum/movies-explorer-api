@@ -2,6 +2,7 @@
 
 // импорты
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -24,5 +25,25 @@ const userSchema = new mongoose.Schema({
     // дописать валидацию?
   },
 })
+
+// добавить метод findUserByCredentials схеме пользователя для облегчения кода в контроллере loginUser
+userSchema.statics.findUserByCredentials = function (email, password) {
+  return this.findOne({ email })
+    .select('+password')
+    .then((user) => {
+      if (!user) {
+        console.log('дописать обработку ошибки');
+      }
+
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            console.log('дописать обработку ошибки2');
+          }
+
+          return user;
+        });
+    });
+};
 
 module.exports = mongoose.model('user', userSchema);
