@@ -6,7 +6,17 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 
-
+const getCurrentUser = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      // обработать ошибку
+      res.send(err);
+    })
+    // .catch(next);?
+};
 
 const loginUser = (req, res, next) => {
   return User
@@ -22,7 +32,7 @@ const loginUser = (req, res, next) => {
     })
     .catch((err) => {
       // обработать ошибку
-      console.log(err);
+      res.send(err);
     })
     // .catch(next);?
 };
@@ -43,12 +53,13 @@ const createUser = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      res.send(err.message);
       // написать обработчики ошибок
     })
 };
 
 module.exports = {
+  getCurrentUser,
   loginUser,
   createUser
 };

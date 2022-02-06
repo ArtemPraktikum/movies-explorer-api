@@ -17,8 +17,8 @@ router.post('/signin', loginUser);// добавить валидацию
 router.post('/signup', createUser);// добавить валидацию
 
 // все роуты с юзерами
-router.use(userRouter);
+router.use(userRouter); // защитить роутер авторизацией
 // все роуты с фильмами
-router.use(movieRouter);
+router.use(movieRouter); // защитить роутер авторизацией
 
 module.exports = router;

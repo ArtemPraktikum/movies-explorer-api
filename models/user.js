@@ -32,13 +32,13 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .select('+password')
     .then((user) => {
       if (!user) {
-        console.log('дописать обработку ошибки');
+        console.log('дописать обработку ошибки, юзер не найден');
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            console.log('дописать обработку ошибки2');
+            console.log('дописать обработку ошибки, пароль не совпадает');
           }
 
           return user;
