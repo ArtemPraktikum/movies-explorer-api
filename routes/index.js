@@ -1,11 +1,10 @@
 // Все роуты подключены в файле index.js а он в app.js
 
+// импорты
 const router = require('express').Router();
-
-// импорты роутеров
+const auth = require('../middlewares/auth');
 const userRouter = require('./users.js');
 const movieRouter = require('./movies.js');
-// импорты контроллеров
 const {
   loginUser,
   createUser
@@ -17,7 +16,7 @@ router.post('/signin', loginUser);// добавить валидацию
 router.post('/signup', createUser);// добавить валидацию
 
 // все роуты с юзерами
-router.use(userRouter); // защитить роутер авторизацией
+router.use(auth, userRouter); // защитить роутер авторизацией
 // все роуты с фильмами
 router.use(movieRouter); // защитить роутер авторизацией
 
