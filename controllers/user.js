@@ -18,6 +18,22 @@ const getCurrentUser = (req, res, next) => {
     // .catch(next);?
 };
 
+const patchCurrentUser = (req, res, next) => {
+  User.findOneAndUpdate(
+    req.user._id,
+    { name: req.body.name, email: req.body.email },
+    { runValidators: true, new: true },
+  )
+    .then((user) => {
+      // обработать ошибку
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      res.send(err) // обработать ошибку
+    })
+    // .catch(next);?
+};
+
 const loginUser = (req, res, next) => {
   return User
     .findUserByCredentials(req.body.email, req.body.password)
@@ -59,6 +75,7 @@ const createUser = (req, res, next) => {
 };
 
 module.exports = {
+  patchCurrentUser,
   getCurrentUser,
   loginUser,
   createUser
