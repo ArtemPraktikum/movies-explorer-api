@@ -1,8 +1,26 @@
 // импорты
 const Movie = require('../models/movie.js');
 
-const createMovie = (req, res, next) => {
+const deleteMovie = (req, res, next) => {
+  Movie.findById(req.params._id)
+    .then((movie) => {
+      if (!movie) {
+        res.send('фильм по _id из параметров не найден'); // добавить обработку ошибки
+      }
+      if (movie.owner.toString() !== req.user._id) {
+        res.send('Вы не можете удалить чужой фильм'); // добавить обработку ошибки
+      } else {
+        Movie.findByIdAndDelete(req.params._id)
+          .then((deletedMovie) => {
+            res.status(200).send({ data: deletedMovie });
+          })
+          // .catch(next); возможно нужно будет прокинуть ошибку дальше
+      }
+    })
+    // .catch(next);?
+};
 
+const createMovie = (req, res, next) => {
   Movie.create({
     owner: req.user._id,
     country: req.body.country,
@@ -28,7 +46,7 @@ const createMovie = (req, res, next) => {
 };
 
 module.exports = {
-  // getMovies,
+  deleteMovie,
   createMovie,
-  // deleteMovie,
+  // getMovies
 };
