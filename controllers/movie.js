@@ -1,6 +1,17 @@
 // импорты
 const Movie = require('../models/movie.js');
 
+const getMovies = (req, res, next) => {
+  Movie.find({ owner: req.user._id })
+    .then((filmCards) => {
+      res.status(200).send(filmCards);
+    })
+    .catch((err) => {
+      res.send(err.message); // обработать ошибку
+    })
+    // .catch(next);?
+};
+
 const deleteMovie = (req, res, next) => {
   Movie.findById(req.params._id)
     .then((movie) => {
@@ -48,5 +59,5 @@ const createMovie = (req, res, next) => {
 module.exports = {
   deleteMovie,
   createMovie,
-  // getMovies
+  getMovies
 };
