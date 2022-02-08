@@ -21,8 +21,14 @@ const getCurrentUser = (req, res, next) => {
 const patchCurrentUser = (req, res, next) => {
   User.findOneAndUpdate(
     req.user._id,
-    { name: req.body.name, email: req.body.email },
-    { runValidators: true, new: true },
+    {
+      name: req.body.name,
+      email: req.body.email
+    },
+    {
+      runValidators: true,
+      new: true
+    },
   )
     .then((user) => {
       // обработать ошибку
