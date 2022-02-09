@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 // импорты
-const Movie = require('../models/movie.js');
+const Movie = require('../models/movie');
 
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
@@ -8,8 +9,8 @@ const getMovies = (req, res, next) => {
     })
     .catch((err) => {
       res.send(err.message); // обработать ошибку
-    })
-    // .catch(next);?
+    });
+  // .catch(next);?
 };
 
 const deleteMovie = (req, res, next) => {
@@ -24,11 +25,11 @@ const deleteMovie = (req, res, next) => {
         Movie.findByIdAndDelete(req.params._id)
           .then((deletedMovie) => {
             res.status(200).send({ data: deletedMovie });
-          })
-          // .catch(next); возможно нужно будет прокинуть ошибку дальше
+          });
+        // .catch(next); возможно нужно будет прокинуть ошибку дальше
       }
-    })
-    // .catch(next);?
+    });
+  // .catch(next);?
 };
 
 const createMovie = (req, res, next) => {
@@ -44,7 +45,7 @@ const createMovie = (req, res, next) => {
     thumbnail: req.body.thumbnail,
     movieId: req.body.movieId,
     nameRU: req.body.nameRU,
-    nameEN: req.body.nameEN
+    nameEN: req.body.nameEN,
   })
     .then((movie) => {
       res.status(201).send({ data: movie });
@@ -52,12 +53,12 @@ const createMovie = (req, res, next) => {
     .catch((err) => {
       res.send(err);
       // обработать ошибку
-    })
-    // .catch(next);?
+    });
+  // .catch(next);?
 };
 
 module.exports = {
   deleteMovie,
   createMovie,
-  getMovies
+  getMovies,
 };

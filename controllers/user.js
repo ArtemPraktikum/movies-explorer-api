@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 // контроллеры для импорта в /routes
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 // импорты
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user.js');
+const User = require('../models/user');
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
@@ -14,8 +15,8 @@ const getCurrentUser = (req, res, next) => {
     .catch((err) => {
       // обработать ошибку
       res.send(err);
-    })
-    // .catch(next);?
+    });
+  // .catch(next);?
 };
 
 const patchCurrentUser = (req, res, next) => {
@@ -23,11 +24,11 @@ const patchCurrentUser = (req, res, next) => {
     req.user._id,
     {
       name: req.body.name,
-      email: req.body.email
+      email: req.body.email,
     },
     {
       runValidators: true,
-      new: true
+      new: true,
     },
   )
     .then((user) => {
@@ -35,29 +36,27 @@ const patchCurrentUser = (req, res, next) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      res.send(err) // обработать ошибку
-    })
-    // .catch(next);?
+      res.send(err); // обработать ошибку
+    });
+  // .catch(next);?
 };
 
-const loginUser = (req, res, next) => {
-  return User
-    .findUserByCredentials(req.body.email, req.body.password)
-    .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-        { expiresIn: '7d' },
-      );
+const loginUser = (req, res, next) => User
+  .findUserByCredentials(req.body.email, req.body.password)
+  .then((user) => {
+    const token = jwt.sign(
+      { _id: user._id },
+      NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+      { expiresIn: '7d' },
+    );
 
-      res.send({ token });
-    })
-    .catch((err) => {
-      // обработать ошибку
-      res.send(err);
-    })
-    // .catch(next);?
-};
+    res.send({ token });
+  })
+  .catch((err) => {
+    // обработать ошибку
+    res.send(err);
+  });
+// .catch(next);?
 
 const createUser = (req, res, next) => {
   bcrypt
@@ -77,13 +76,12 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       res.send(err.message);
       // написать обработчики ошибок
-    })
+    });
 };
 
 module.exports = {
   patchCurrentUser,
   getCurrentUser,
   loginUser,
-  createUser
+  createUser,
 };
-

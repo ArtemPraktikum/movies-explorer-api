@@ -5,7 +5,7 @@ const userRouter = require('express').Router();
 const {
   patchCurrentUser,
   getCurrentUser,
-} = require('../controllers/user.js');
+} = require('../controllers/user');
 
 // роутер для контроллера который возвращает информацию о пользователе (email и имя)
 userRouter.get('/users/me', getCurrentUser); // добавить проверку данных от пользователя

@@ -65,6 +65,6 @@ const movieSchema = new mongoose.Schema({
     required: true,
     // дописать валидацию
   },
-})
+});
 
 module.exports = mongoose.model('movie', movieSchema);

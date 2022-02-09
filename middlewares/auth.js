@@ -2,6 +2,7 @@
 
 // импорты
 const jwt = require('jsonwebtoken');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const auth = (req, res, next) => {
@@ -19,7 +20,7 @@ const auth = (req, res, next) => {
     } catch (err) {
       res.send(err); // добавить обработку ошибки
     }
-    
+
     req.user = payload;
 
     next();

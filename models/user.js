@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // схема юзера для импорта в controllers/user.js
 
 // импорты
@@ -24,9 +25,10 @@ const userSchema = new mongoose.Schema({
     maxlength: 30,
     // дописать валидацию?
   },
-})
+});
 
-// добавить метод findUserByCredentials схеме пользователя для облегчения кода в контроллере loginUser
+// добавить метод findUserByCredentials схеме пользователя для облегчения кода в loginUser
+// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email })
     .select('+password')

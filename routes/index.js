@@ -3,12 +3,12 @@
 // импорты
 const router = require('express').Router();
 const auth = require('../middlewares/auth');
-const userRouter = require('./users.js');
-const movieRouter = require('./movies.js');
+const userRouter = require('./users');
+const movieRouter = require('./movies');
 const {
   loginUser,
-  createUser
-} = require('../controllers/user.js');
+  createUser,
+} = require('../controllers/user');
 
 // роутер для контроллера который проверяет переданные в теле {почту и пароль} и возвращает JWT
 router.post('/signin', loginUser);// добавить валидацию
