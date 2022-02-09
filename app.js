@@ -7,6 +7,7 @@ const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const router = require('./routes/index');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 // настройка лимитера
 const limiter = rateLimit({
@@ -29,8 +30,15 @@ mongoose.connect('mongodb://localhost:27017/moviesdb').then(() => {
 app.use(bodyParser.json());
 app.use(helmet());
 app.use(limiter);
+
+// логер запросов
+app.use(requestLogger);
+
 // единый роутер для всего
 app.use('/', router);
+
+// логер ошибок
+app.use(errorLogger);
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
