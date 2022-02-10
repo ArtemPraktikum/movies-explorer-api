@@ -6,10 +6,13 @@ const {
   patchCurrentUser,
   getCurrentUser,
 } = require('../controllers/user');
+const {
+  validatePatchCurrentUser,
+} = require('../utils/joiValidationPresets');
 
 // роутер для контроллера который возвращает информацию о пользователе (email и имя)
 userRouter.get('/users/me', getCurrentUser); // добавить проверку данных от пользователя
 // роутер для контроллера который обновляет информацию о пользователе (email и имя)
-userRouter.patch('/users/me', patchCurrentUser); // добавить проверку данных от пользователя
+userRouter.patch('/users/me', validatePatchCurrentUser, patchCurrentUser); // добавить проверку данных от пользователя
 
 module.exports = userRouter;

@@ -15,26 +15,22 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    // дописать валидацию
   },
   password: {
     type: String,
     required: true,
     select: false,
-    // дописать валидацию
   },
   name: {
     type: String,
     required: true,
     minlength: 2,
     maxlength: 30,
-    // дописать валидацию?
   },
 });
 
 // добавить метод findUserByCredentials схеме пользователя для облегчения кода в loginUser
-// eslint-disable-next-line func-names
-userSchema.statics.findUserByCredentials = function (email, password) {
+userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
   return this.findOne({ email })
     .select('+password')
     .then((user) => {

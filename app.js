@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { errors } = require('celebrate');
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const centralErrorHandler = require('./middlewares/centralErrorHandler');
@@ -40,7 +41,8 @@ app.use('/', router);
 
 // логер ошибок
 app.use(errorLogger);
-
+// joi обработчик ошибок
+app.use(errors());
 // централизованный обработчик ошибки
 app.use(centralErrorHandler);
 

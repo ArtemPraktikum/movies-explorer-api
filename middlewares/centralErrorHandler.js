@@ -1,9 +1,11 @@
-const centralErrorHandler = (err, req, res) => {
+const centralErrorHandler = (err, req, res, next) => {
   if (err.status) {
     res.status(err.status).send({ message: `${err.message}` });
-    return;
+  } else {
+    res.status(500).send({ message: `На сервере произошла ошибка, ${err.message}` });
+  } if (next) {
+    next(); // этот некст добавлен только что бы линт не ругался
   }
-  res.status(500).send({ message: `На сервере произошла ошибка, ${err.message}` });
 };
 
 module.exports = centralErrorHandler;
