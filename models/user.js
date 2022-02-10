@@ -4,6 +4,11 @@
 // импорты
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const UnauthorizedError = require('../errors/UnauthorizedError');
+const {
+  emailNotFound,
+  wrongPassword,
+} = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -34,13 +39,13 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .select('+password')
     .then((user) => {
       if (!user) {
-        console.log('дописать обработку ошибки, юзер не найден');
+        return Promise.reject(new UnauthorizedError(emailNotFound));
       }
 
       return bcrypt.compare(password, user.password)
-        .then((matched) => {
-          if (!matched) {
-            console.log('дописать обработку ошибки, пароль не совпадает');
+        .then((match) => {
+          if (!match) {
+            return Promise.reject(new UnauthorizedError(wrongPassword));
           }
 
           return user;

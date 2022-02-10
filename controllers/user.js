@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // контроллеры для импорта в /routes
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -6,8 +5,15 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const BadRequestError = require('../errors/BadRequestError');
+const ConflictError = require('../errors/ConflictError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
+const {
+  emailAlreadyUsed,
+  badUserData,
+} = require('../utils/constants');
 
-const getCurrentUser = (req, res, next) => {
+const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
     .then((user) => {
       res.status(200).send(user);
@@ -19,7 +25,7 @@ const getCurrentUser = (req, res, next) => {
   // .catch(next);?
 };
 
-const patchCurrentUser = (req, res, next) => {
+const patchCurrentUser = (req, res) => {
   User.findOneAndUpdate(
     req.user._id,
     {
@@ -52,11 +58,10 @@ const loginUser = (req, res, next) => User
 
     res.send({ token });
   })
-  .catch((err) => {
-    // обработать ошибку
-    res.send(err);
-  });
-// .catch(next);?
+  .catch(() => {
+    throw new UnauthorizedError(badUserData);
+  })
+  .catch(next);
 
 const createUser = (req, res, next) => {
   bcrypt
@@ -74,9 +79,14 @@ const createUser = (req, res, next) => {
       });
     })
     .catch((err) => {
-      res.send(err.message);
-      // написать обработчики ошибок
-    });
+      if (err.name === 'ValidationError') {
+        throw new BadRequestError(badUserData);
+      }
+      if (err.code === 11000) {
+        throw new ConflictError(emailAlreadyUsed);
+      } else next(err);
+    })
+    .catch(next);
 };
 
 module.exports = {

@@ -8,6 +8,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const centralErrorHandler = require('./middlewares/centralErrorHandler');
 
 // настройка лимитера
 const limiter = rateLimit({
@@ -39,6 +40,9 @@ app.use('/', router);
 
 // логер ошибок
 app.use(errorLogger);
+
+// централизованный обработчик ошибки
+app.use(centralErrorHandler);
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
