@@ -1,4 +1,5 @@
 // контроллеры для импорта в /routes
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 // импорты
@@ -7,44 +8,40 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
-const UnauthorizedError = require('../errors/UnauthorizedError');
 const {
   emailAlreadyUsed,
   badUserData,
 } = require('../utils/constants');
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       res.status(200).send(user);
     })
-    .catch((err) => {
-      // обработать ошибку
-      res.send(err);
-    });
-  // .catch(next);?
+    .catch(next);
 };
 
-const patchCurrentUser = (req, res) => {
+const patchCurrentUser = (req, res, next) => {
+  const id = req.user._id;
+  const newName = req.body.name;
+  const newEmail = req.body.email;
   User.findOneAndUpdate(
-    req.user._id,
-    {
-      name: req.body.name,
-      email: req.body.email,
-    },
-    {
-      runValidators: true,
-      new: true,
-    },
+    { _id: id },
+    { name: newName, email: newEmail },
+    { runValidators: true, new: true },
   )
     .then((user) => {
-      // обработать ошибку
       res.status(200).send(user);
     })
     .catch((err) => {
-      res.send(err); // обработать ошибку
-    });
-  // .catch(next);?
+      if (err.name === 'ValidationError') {
+        throw new BadRequestError(badUserData);
+      }
+      if (err.code === 11000) {
+        throw new ConflictError(emailAlreadyUsed);
+      } else next(err);
+    })
+    .catch(next);
 };
 
 const loginUser = (req, res, next) => User
@@ -57,9 +54,6 @@ const loginUser = (req, res, next) => User
     );
 
     res.send({ token });
-  })
-  .catch(() => {
-    throw new UnauthorizedError(badUserData);
   })
   .catch(next);
 

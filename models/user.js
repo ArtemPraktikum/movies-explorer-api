@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // схема юзера для импорта в controllers/user.js
 
 // импорты

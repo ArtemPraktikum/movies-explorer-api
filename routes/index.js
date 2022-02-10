@@ -11,12 +11,14 @@ const {
 } = require('../controllers/user');
 const {
   validateCreateUser,
+  validateLoginUser,
 } = require('../utils/joiValidationPresets');
 
 // роутер для контроллера который проверяет переданные в теле {почту и пароль} и возвращает JWT
-router.post('/signin', loginUser);// добавить валидацию
+router.post('/signin', validateLoginUser, loginUser);
+
 // роутер для контроллера который создаёт пользователя с переданными в теле {email, password и name}
-router.post('/signup', validateCreateUser, createUser);// добавить валидацию
+router.post('/signup', validateCreateUser, createUser);
 
 // все роуты с юзерами
 router.use(auth, userRouter);

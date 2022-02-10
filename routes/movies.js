@@ -7,13 +7,18 @@ const {
   createMovie,
   getMovies,
 } = require('../controllers/movie');
-
+const {
+  validateCreateMovie,
+  validateDeleteMovie,
+} = require('../utils/joiValidationPresets');
 // роутер для контроллера который возвращает все сохранённые текущим  пользователем фильмы
-movieRouter.get('/movies', getMovies);
+movieRouter.get('/movies', getMovies); // валидация не нужна
+
 // роутер для контроллера который создаёт фильм с переданными в теле
 // {country,director,duration,year,description,image,trailer,nameRU,nameEN,thumbnail,movieId}
-movieRouter.post('/movies', createMovie);
+movieRouter.post('/movies', validateCreateMovie, createMovie);
+
 // роутер для контроллера который удаляет сохранённый фильм по _id
-movieRouter.delete('/movies/:_id', deleteMovie);
+movieRouter.delete('/movies/:_id', validateDeleteMovie, deleteMovie);
 
 module.exports = movieRouter;

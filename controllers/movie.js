@@ -1,40 +1,51 @@
-/* eslint-disable no-unused-vars */
+// контроллеры для импорта в /routes
+
 // импорты
 const Movie = require('../models/movie');
+const BadRequestError = require('../errors/BadRequestError');
+const NotFoundError = require('../errors/NotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
+
+const {
+  badMovieData,
+  movieNotFound,
+  cantDeleteMovie,
+} = require('../utils/constants');
 
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
     .then((filmCards) => {
       res.status(200).send(filmCards);
     })
-    .catch((err) => {
-      res.send(err.message); // обработать ошибку
-    });
-  // .catch(next);?
+    .catch(next);
 };
 
 const deleteMovie = (req, res, next) => {
+  const owner = req.user._id;
+
   Movie.findById(req.params._id)
     .then((movie) => {
       if (!movie) {
-        res.send('фильм по _id из параметров не найден'); // добавить обработку ошибки
+        throw new NotFoundError(movieNotFound);
       }
-      if (movie.owner.toString() !== req.user._id) {
-        res.send('Вы не можете удалить чужой фильм'); // добавить обработку ошибки
+      if (movie.owner.toString() !== owner) {
+        throw new ForbiddenError(cantDeleteMovie);
       } else {
         Movie.findByIdAndDelete(req.params._id)
           .then((deletedMovie) => {
-            res.status(200).send({ data: deletedMovie });
-          });
-        // .catch(next); возможно нужно будет прокинуть ошибку дальше
+            res.status(200).send(deletedMovie);
+          })
+          .catch(next);
       }
-    });
-  // .catch(next);?
+    })
+    .catch(next);
 };
 
 const createMovie = (req, res, next) => {
+  const owner = req.user._id;
+
   Movie.create({
-    owner: req.user._id,
+    owner,
     country: req.body.country,
     director: req.body.director,
     duration: req.body.duration,
@@ -48,13 +59,14 @@ const createMovie = (req, res, next) => {
     nameEN: req.body.nameEN,
   })
     .then((movie) => {
-      res.status(201).send({ data: movie });
+      res.status(201).send(movie);
     })
     .catch((err) => {
-      res.send(err);
-      // обработать ошибку
-    });
-  // .catch(next);?
+      if (err.name === 'ValidationError') {
+        throw new BadRequestError(badMovieData);
+      } else next(err);
+    })
+    .catch(next);
 };
 
 module.exports = {

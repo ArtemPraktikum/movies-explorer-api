@@ -11,8 +11,9 @@ const {
 } = require('../utils/joiValidationPresets');
 
 // роутер для контроллера который возвращает информацию о пользователе (email и имя)
-userRouter.get('/users/me', getCurrentUser); // добавить проверку данных от пользователя
+userRouter.get('/users/me', getCurrentUser); // валидация не нужна
+
 // роутер для контроллера который обновляет информацию о пользователе (email и имя)
-userRouter.patch('/users/me', validatePatchCurrentUser, patchCurrentUser); // добавить проверку данных от пользователя
+userRouter.patch('/users/me', validatePatchCurrentUser, patchCurrentUser);
 
 module.exports = userRouter;
