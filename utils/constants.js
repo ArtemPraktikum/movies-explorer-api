@@ -6,6 +6,8 @@ const emailNotFound = 'Пользователь с данным email адрес
 const wrongPassword = 'Неверный пароль';
 const movieNotFound = 'Фильм с данным _id не существует';
 const cantDeleteMovie = 'Вы не можете удалить фильм другого пользователя';
+const wrongAuthHeader = 'Заголовок Autorization передаёт невалидные данные или отсутствует';
+const wrongToken = 'Токен не совпадет';
 
 module.exports = {
   emailAlreadyUsed,
@@ -16,4 +18,6 @@ module.exports = {
   badMovieData,
   movieNotFound,
   cantDeleteMovie,
+  wrongAuthHeader,
+  wrongToken,
 };
