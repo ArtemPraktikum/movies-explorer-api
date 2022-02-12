@@ -13,14 +13,14 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const centralErrorHandler = require('./middlewares/centralErrorHandler');
 
 // Слушаем 3000 порт
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, NODE_ENV, DB_URL } = process.env;
 // функциональность точки входа
 const app = express();
 
 app.use(cors());
 
 // подключение к бд
-mongoose.connect('mongodb://localhost:27017/moviesdb').then(() => {
+mongoose.connect(NODE_ENV === 'production' ? DB_URL : 'mongodb://localhost:27017/moviesdb').then(() => {
   // Если бд работает, консоль подтвердит
   console.log('Connected to the Database. Yayzow!');
 });
@@ -28,10 +28,9 @@ mongoose.connect('mongodb://localhost:27017/moviesdb').then(() => {
 // подключить middlewares
 app.use(bodyParser.json());
 app.use(helmet());
-app.use(rateLimiter);
-
 // логер запросов
 app.use(requestLogger);
+app.use(rateLimiter);
 
 // единый роутер для всего
 app.use('/', router);

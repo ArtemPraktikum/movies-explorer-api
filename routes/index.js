@@ -5,6 +5,7 @@ const router = require('express').Router();
 const auth = require('../middlewares/auth');
 const userRouter = require('./users');
 const movieRouter = require('./movies');
+const NotFoundError = require('../errors/NotFoundError');
 const {
   loginUser,
   createUser,
@@ -13,7 +14,9 @@ const {
   validateCreateUser,
   validateLoginUser,
 } = require('../utils/joiValidationPresets');
-
+const {
+  unknownPath,
+} = require('../utils/constants');
 // роутер для контроллера который проверяет переданные в теле {почту и пароль} и возвращает JWT
 router.post('/signin', validateLoginUser, loginUser);
 
@@ -24,5 +27,10 @@ router.post('/signup', validateCreateUser, createUser);
 router.use(auth, userRouter);
 // все роуты с фильмами
 router.use(auth, movieRouter);
+
+// обработка обращения к несуществующему роуту
+router.use('/*', () => {
+  throw new NotFoundError(unknownPath);
+});
 
 module.exports = router;

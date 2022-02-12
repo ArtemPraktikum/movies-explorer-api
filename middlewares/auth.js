@@ -3,7 +3,6 @@
 // импорты
 const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
-const BadRequestError = require('../errors/BadRequestError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const {
   wrongAuthHeader,
@@ -14,7 +13,7 @@ const auth = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new BadRequestError(wrongAuthHeader);
+    throw new UnauthorizedError(wrongAuthHeader);
   }
 
   const token = authorization.replace('Bearer ', '');

@@ -1,1 +1,1 @@
-# api: api.artem.movie.students.nomoredomains.work
+# api: api.artem.movies.students.nomoredomains.work

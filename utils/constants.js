@@ -8,6 +8,7 @@ const movieNotFound = 'Фильм с данным _id не существует'
 const cantDeleteMovie = 'Вы не можете удалить фильм другого пользователя';
 const wrongAuthHeader = 'Заголовок Autorization передаёт невалидные данные или отсутствует';
 const wrongToken = 'Токен не совпадет';
+const unknownPath = 'Вы пытаетесь обратиться к несуществующему роуту';
 
 module.exports = {
   emailAlreadyUsed,
@@ -20,4 +21,5 @@ module.exports = {
   cantDeleteMovie,
   wrongAuthHeader,
   wrongToken,
+  unknownPath,
 };
