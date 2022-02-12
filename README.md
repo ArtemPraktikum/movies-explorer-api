@@ -1,1 +1,1 @@
-# movies-explorer-api
+# api: api.artem.movies.students.nomoredomains.work
